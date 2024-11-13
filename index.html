@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculatrice Scientifique</title>
+    <style>
+        /* Style général */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+        }
+
+        /* Conteneur principal */
+        .calculator {
+            background-color: #222;
+            width: 90%;
+            max-width: 600px;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        /* En-tête */
+        .header {
+            background-color: #2196F3;
+            width: 100%;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            color: white;
+        }
+
+        .header img {
+            height: 40px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        .header h1 {
+            display: inline;
+            font-size: 24px;
+        }
+
+        /* Affichage */
+        .display {
+            width: 100%;
+            height: 100px;
+            background-color: #333;
+            border: 2px solid #555;
+            border-radius: 8px;
+            text-align: right;
+            padding: 20px;
+            font-size: 30px;
+            color: white;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .operations {
+            font-size: 24px;
+            color: #cccccc;
+        }
+
+        .results {
+            font-size: 30px;
+            color: #4CAF50;
+        }
+
+        /* Grille des boutons */
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            width: 100%;
+        }
+
+        /* Style des boutons */
+        .buttons button {
+            padding: 15px;
+            font-size: 20px;
+            border: none;
+            border-radius: 8px;
+            background-color: #444;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .buttons button:hover {
+            background-color: #555;
+        }
+
+        .buttons button:active {
+            background-color: #666;
+        }
+
+        /* Bouton Equal */
+        .button-equal {
+            background-color: #4CAF50;
+            color: white;
+            grid-column: span 2;
+        }
+
+        .button-clear {
+            background-color: #ff4d4d;
+            color: white;
+        }
+
+        /* Boutons ON et OFF */
+        .button-on {
+            background-color: #00C851;
+        }
+
+        .button-off {
+            background-color: #ff4444;
+        }
+
+        /* Pied de page */
+        .footer {
+            background-color: #2196F3;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .footer a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        /* Responsivité */
+        @media (max-width: 600px) {
+            .calculator {
+                padding: 15px;
+            }
+
+            .buttons button {
+                font-size: 18px;
+                padding: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- En-tête avec logo et nom de l'entreprise -->
+<div class="header">
+    <img src="fg.png" alt="Logo" />
+    <h1>MEK²JB-Porpo</h1>
+</div>
+
+<!-- Calculatrice -->
+<div class="calculator" id="calculator">
+    <div class="display" id="display">
+        <div class="operations" id="operations">0</div>
+        <div class="results" id="results">0</div>
+    </div>
+    <div class="buttons">
+        <!-- Boutons ON et OFF -->
+        <button onclick="turnOn()" class="button-on">ON</button>
+        <button onclick="turnOff()" class="button-off">OFF</button>
+        
+        <!-- Fonctions scientifiques et mémoire -->
+        <button onclick="appendToDisplay('sin(')">sin</button>
+        <button onclick="appendToDisplay('cos(')">cos</button>
+        <button onclick="appendToDisplay('tan(')">tan</button>
+        <button onclick="appendToDisplay('sqrt(')">√</button>
+
+        <button onclick="appendToDisplay('log(')">log</button>
+        <button onclick="appendToDisplay('ln(')">ln</button>
+        <button onclick="appendToDisplay('(')">(</button>
+        <button onclick="appendToDisplay(')')">)</button>
+
+        <button onclick="appendToDisplay('^')">xʸ</button>
+        <button onclick="appendToDisplay('1/')">1/x</button>
+        <button onclick="appendToDisplay('%')">%</button>
+        <button onclick="deleteLastCharacter()" class="button-clear">⌫</button>
+
+        <!-- Nombres et opérations -->
+        <button onclick="appendToDisplay('7')">7</button>
+        <button onclick="appendToDisplay('8')">8</button>
+        <button onclick="appendToDisplay('9')">9</button>
+        <button onclick="appendToDisplay('/')">/</button>
+
+        <button onclick="appendToDisplay('4')">4</button>
+        <button onclick="appendToDisplay('5')">5</button>
+        <button onclick="appendToDisplay('6')">6</button>
+        <button onclick="appendToDisplay('*')">*</button>
+
+        <button onclick="appendToDisplay('1')">1</button>
+        <button onclick="appendToDisplay('2')">2</button>
+        <button onclick="appendToDisplay('3')">3</button>
+        <button onclick="appendToDisplay('-')">-</button>
+
+        <button onclick="appendToDisplay('0')">0</button>
+        <button onclick="appendToDisplay('.')">.</button>
+        <button onclick="calculate()" class="button-equal">=</button>
+        <button onclick="appendToDisplay('+')">+</button>
+
+        <!-- Fonctions mémoire et Clear -->
+        <button onclick="clearDisplay()" class="button-clear">C</button>
+        <button onclick="appendToDisplay('M+')">M+</button>
+        <button onclick="appendToDisplay('M-')">M-</button>
+        <button onclick="appendToDisplay('MR')">MR</button>
+    </div>
+</div>
+
+<!-- Pied de page avec réseaux sociaux -->
+<div class="footer">
+    <a href="https://wa.me/+22892092582" target="_blank">WhatsApp</a>
+    <a href="https://www.facebook.com/jeanbaptist.eklou/" target="_blank">Facebook</a>
+    <a href="https://www.linkedin.com/in/kossi-jean-eklou-816003286/" target="_blank">LinkedIn</a>
+    <a href="https://www.instagram.com/ekloujean100" target="_blank">Instagram</a>
+</div>
+
+<script>
+    let operationsDisplay = document.getElementById("operations");
+    let resultsDisplay = document.getElementById("results");
+    let calculator = document.getElementById("calculator");
+    let isOn = false;
+
+    function appendToDisplay(value) {
+        if (!isOn) return;
+        if (operationsDisplay.innerText === "0") operationsDisplay.innerText = value;
+        else operationsDisplay.innerText += value;
+    }
+
+    function calculate() {
+        if (!isOn) return;
+        try {
+            let result = eval(operationsDisplay.innerText.replace('^', '**').replace('sqrt(', 'Math.sqrt(').replace('log(', 'Math.log10(').replace('ln(', 'Math.log(').replace('sin(', 'Math.sin(').replace('cos(', 'Math.cos(').replace('tan(', 'Math.tan('));
+            resultsDisplay.innerText = result;
+        } catch (e) {
+            resultsDisplay.innerText = "Erreur";
+        }
+    }
+
+    function deleteLastCharacter() {
+        if (!isOn) return;
+        let currentText = operationsDisplay.innerText;
+        operationsDisplay.innerText = currentText.length > 1 ? currentText.slice(0, -1) : "0";
+    }
+
+    function clearDisplay() {
+        if (!isOn) return;
+        operationsDisplay.innerText = "0";
+        resultsDisplay.innerText = "0";
+    }
+
+    function turnOn() {
+        isOn = true;
+        calculator.style.opacity = 1;
+        operationsDisplay.innerText = "0";
+        resultsDisplay.innerText = "0";
+    }
+
+    function turnOff() {
+        isOn = false;
+        calculator.style.opacity = 0.5;
+        operationsDisplay.innerText = "";
+        resultsDisplay.innerText = "";
+    }
+</script>
+
+</body>
+</html>
